@@ -4,7 +4,7 @@ private class AccountControllerTest {
     static void testGetTop10Accounts() {
         // Create test accounts
         List<Account> testAccounts = new List<Account>();
-        for (Integer i = 0; i < 15; i++) {
+        for (Integer i = 0; i < 12; i++) {
             testAccounts.add(new Account(Name = 'Test Account ' + i));
         }
         insert testAccounts;
