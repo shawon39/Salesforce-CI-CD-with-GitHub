@@ -20,7 +20,10 @@ jobs:
           sfdx --version
 
       - name: Authenticate with Salesforce
-        run: echo ${{ secrets.SFDX_AUTH_URL }} | sfdx auth:sfdxurl:store --setalias ci-org --noninteractive
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > sfdx-auth.txt
+          sfdx auth:sfdxurl:store --sfdxurlfile sfdx-auth.txt --setalias ci-org
+          rm sfdx-auth.txt  # Clean up after authentication
 
       - name: Validate Deployment
         run: sfdx force:source:deploy -p force-app --checkonly -u ci-org
