@@ -1,0 +1,29 @@
+name: Salesforce CI/CD
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install --global sfdx-cli
+          sfdx --version
+
+      - name: Authenticate with Salesforce
+        run: echo ${{ secrets.SFDX_AUTH_URL }} | sfdx auth:sfdxurl:store --setalias ci-org --noninteractive
+
+      - name: Validate Deployment
+        run: sfdx force:source:deploy -p force-app --checkonly -u ci-org
+
+      - name: Run Apex Tests
+        run: sfdx force:apex:test:run -u ci-org --resultformat human --codecoverage --wait 10
