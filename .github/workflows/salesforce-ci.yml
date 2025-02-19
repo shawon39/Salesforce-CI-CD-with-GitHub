@@ -12,17 +12,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Updated to latest version
 
       - name: Install Salesforce CLI
-        run: |
-          npm install --global sfdx-cli
-          sfdx --version
+        uses: salesforcecli/setup-sfdx@v2  # Latest official CLI setup
+        with:
+          version: latest  # Ensures the latest version is used
 
       - name: Authenticate with Salesforce
         run: |
           echo "${{ secrets.SFDX_AUTH_URL }}" > sfdx-auth.txt
-          sfdx force:auth:sfdxurl:store --sfdxurlfile sfdx-auth.txt --setalias ci-org
+          sfdx auth:sfdxurl:store --sfdxurlfile sfdx-auth.txt --setalias ci-org
           rm sfdx-auth.txt  # Clean up after authentication
 
       - name: Validate Deployment
